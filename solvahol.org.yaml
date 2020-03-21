@@ -1,0 +1,29 @@
+---
+'':
+  - type: A
+    values:
+      - 34.239.233.24
+  - type: CAA
+    values:
+      - flags: 0
+        tag: issue
+        value: letsencrypt.org
+  - type: MX
+    values:
+      - priority: 10
+        value: mail.solvahol.org.
+mail:
+  type: CNAME
+  value: us70.solvahol.org.
+us70:
+  - type: A
+    values:
+      - 34.239.233.24
+  - type: CAA
+    values:
+      - flags: 0
+        tag: issue
+        value: letsencrypt.org
+www:
+  type: CNAME
+  value: us70.solvahol.org.

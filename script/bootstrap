@@ -16,7 +16,7 @@ for _thiscmd in git python3 yamllint shellcheck; do
 done
 
 # Required files are present, readable, and not empty.
-for _thisfile in requirements.txt public.yaml private.yaml .config; do
+for _thisfile in requirements.txt public.yaml .config; do
   if [ ! -s "${_thisfile}" ] && [ ! -r "${_thisfile}" ]; then
     echo "WARN: Missing ${_thisfile}"
   fi

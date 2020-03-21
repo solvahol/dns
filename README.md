@@ -26,10 +26,4 @@ Please:
 **_Add a new DNS provider:_**
 
 1. Add credentials to `.env` and add GitHub secrets.
-1. Update `public.yaml` and/or `private.yaml` as needed.
-
-## To do
-
-- Add self-hosted runner to deploy private.yaml. Update workflow and tests.
-- Teach scripts about local and (GitHub Actions) workflow environments.
-- Figure out how to run this action without Docker or NodeJS.
+1. Update `public.yaml`.

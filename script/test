@@ -16,7 +16,6 @@ cd "$(git rev-parse --show-toplevel)" || return
 ./test/00_linters
 
 # - Test our configs.
-# TODO: ./test/10_test-config private.yaml
 ./test/10_test-config public.yaml
 
 # - Test all configured DNS records.

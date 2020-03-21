@@ -20,6 +20,6 @@ else
   echo " "
   echo "Did not find docker. Run this command:"
   echo "docker run --rm -v \"${_volume}\":\"${_mountpoint}\":ro \\"
-  echo "--env-file \"${_env_path}\" --entrypoint /bin/sh \"${_image}\"
+  echo "--env-file \"${_env_path}\" --entrypoint /bin/sh \"${_image}\""
   echo " "
 fi

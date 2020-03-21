@@ -1,0 +1,50 @@
+name: octodns
+
+on:
+  push:
+    paths:
+      - '*.yaml'
+      - 'requirements.txt'
+      - 'script/cibuild'
+      - '.github/workflows/*.yml'
+
+env:
+  # Add the environment variables used by your provider.
+  AWS_ACCESS_KEY_ID: ${{ secrets.route53_aws_key_id }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.route53_aws_secret_access_key }}
+  CONFIG_FILE_PATH: config/public.yaml
+
+jobs:
+  test-and-deploy:
+    name: Test changes to DNS config. Deploy master.
+    runs-on: ubuntu-latest
+    steps:
+      # TODO: Add status check to the commit.
+      - name: Setup python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+          architecture: x64
+      - name: Checkout config repository
+        uses: actions/checkout@v2
+        with:
+          path: config
+      - name: Checkout github/octodns repository
+        uses: actions/checkout@v2
+        with:
+          repository: github/octodns
+          ref: master
+          path: octodns
+      - name: Set scripts executable
+        run: chmod +x config/.config config/script/*
+      - name: Run config/script/cibuild
+        run: config/script/cibuild
+      - name: Test current config
+        run: |
+          cd "${GITHUB_WORKSPACE}/$(dirname ${CONFIG_FILE_PATH})"
+          octodns-sync --config-file="$(basename ${CONFIG_FILE_PATH})"
+      - name: Deploy master
+        if: github.ref == 'refs/heads/master'
+        run: |
+          cd "${GITHUB_WORKSPACE}/$(dirname ${CONFIG_FILE_PATH})"
+          octodns-sync --config-file="$(basename ${CONFIG_FILE_PATH})" --doit

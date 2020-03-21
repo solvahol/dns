@@ -1,0 +1,28 @@
+#!/bin/sh
+
+#
+# Deploy a config in the current checkout.
+#
+# Usage:
+#   ./script/deploy public.yaml --doit
+#
+
+# Change directory to the root of this repository.
+cd "$(git rev-parse --show-toplevel)" || return
+
+# Set environment variables.
+. ./.config
+
+# Deploy config:
+if command -v docker >/dev/null 2>&1; then
+  docker run --rm -v "${_volume}":"${_mountpoint}":ro \
+  --env-file "${_env_path}" "${_image}" \
+  "${_mountpoint}/${1:-public.yaml}" ${2:+"${2}"}
+else
+  echo " "
+  echo "Did not find docker. Run this command:"
+  echo "docker run --rm -v \"${_volume}\":\"${_mountpoint}\":ro \\"
+  echo "--env-file \"${_env_path}\" \"${_image}\" \\"
+  echo "\"${_mountpoint}/${1:-public.yaml}\" ${2:+"${2}"}"
+  echo " "
+fi

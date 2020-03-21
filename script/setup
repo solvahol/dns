@@ -1,0 +1,21 @@
+#!/bin/sh
+
+#
+# Use these scripts to (test and) deploy the octodns config in this repository.
+#
+# - script/setup:
+#
+
+# Change directory to the root of this repository.
+cd "$(git rev-parse --show-toplevel)" || return
+
+# Set environment variables.
+. ./.config
+
+if [ -s "${_env_path}" ] && [ -r "${_env_path}" ]; then
+  cp .env.example "${_env_path}"
+  chmod 600 .env
+  echo "Hey, add your keys to ${_env_path}."
+fi
+
+# TODO: How to verify things are set up right?

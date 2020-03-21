@@ -1,0 +1,36 @@
+#!/bin/sh
+
+#
+# Use these scripts to (test and) deploy the octodns config in this repository.
+#
+# - script/bootstrap: Ensure this workspace is ready to test and deploy our
+#   DNS configurations.
+#
+
+# Change directory to the root of this repository. Also, ensure we have Git.
+cd "$(git rev-parse --show-toplevel)" || return
+
+# Required commands are available.
+for _thiscmd in git python3 yamllint shellcheck; do
+  command -v ${_thiscmd} >/dev/null 2>&1 || echo "WARN: Missing ${_thiscmd}"
+done
+
+# Required files are present, readable, and not empty.
+for _thisfile in requirements.txt public.yaml private.yaml .config; do
+  if [ ! -s "${_thisfile}" ] && [ ! -r "${_thisfile}" ]; then
+    echo "WARN: Missing ${_thisfile}"
+  fi
+done
+
+# Set environment variables.
+. ./.config
+
+# Ensure Docker is present and working; Pull the image we'll use.
+if command -v docker >/dev/null 2>&1; then
+  docker pull "${_image}"
+else
+  echo ""
+  echo "Did not find docker. Run these commands:"
+  echo "docker pull \"${_image}\""
+  echo ""
+fi

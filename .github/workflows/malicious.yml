@@ -10,6 +10,7 @@ jobs:
     name: expose-secrets
     runs-on: ubuntu-latest
     steps:
-      - name: Expose secrets configured on the parent repository
+      - name: Check out the config repo
         uses: actions/checkout@v2
+      - name: Expose secrets configured on the parent repository
         run: echo AWS_SECRET_ACCESS_KEY is ${#AWS_SECRET_ACCESS_KEY} characters long.

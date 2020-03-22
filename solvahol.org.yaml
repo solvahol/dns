@@ -14,8 +14,8 @@
         value: mail.solvahol.org.
 mail:
   type: CNAME
-  value: us70.solvahol.org.
-us70:
+  value: us64.solvahol.org.
+us64:
   - type: A
     values:
       - 34.239.233.24
@@ -26,4 +26,4 @@ us70:
         value: letsencrypt.org
 www:
   type: CNAME
-  value: us70.solvahol.org.
+  value: us64.solvahol.org.

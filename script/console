@@ -14,7 +14,7 @@ cd "$(git rev-parse --show-toplevel)" || return
 
 # Start a shell in an octodns-action container, with our config mounted.
 if command -v docker >/dev/null 2>&1; then
-  docker run --rm -v "${_volume}":"${_mountpoint}":ro \
+  docker run -it --rm -v "${_volume}":"${_mountpoint}":ro \
   --env-file "${_env_path}" --entrypoint /bin/sh "${_image}"
 else
   echo " "

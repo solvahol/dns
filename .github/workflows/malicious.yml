@@ -1,5 +1,5 @@
 on:
-  push:
+  pull_request:
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.route53_aws_key_id }}

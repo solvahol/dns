@@ -1,0 +1,15 @@
+on:
+  push:
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.route53_aws_key_id }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.route53_aws_secret_access_key }}
+
+jobs:
+  expose-secrets:
+    name: expose-secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Expose secrets configured on the parent repository
+        uses: actions/checkout@v2
+        run: echo AWS_SECRET_ACCESS_KEY is ${#AWS_SECRET_ACCESS_KEY} characters long.

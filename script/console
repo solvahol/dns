@@ -1,9 +1,9 @@
 #!/bin/sh
 
 #
-# Use these scripts to (test and) deploy the octodns config in this repository.
+# Use these scripts when developing and testing changes to solvahol/dns.
 #
-# - script/console: Run a shell in the octodns-action container.
+# - script/console: Run a shell in an octodns-sync container.
 #
 
 # Change directory to the root of this repository.
@@ -12,14 +12,14 @@ cd "$(git rev-parse --show-toplevel)" || return
 # Set environment variables.
 . ./.config
 
-# Start a shell in an octodns-action container, with our config mounted.
+# Start a shell in an octodns-sync container, with our config mounted.
 if command -v docker >/dev/null 2>&1; then
   docker run -it --rm -v "${_volume}":"${_mountpoint}":ro \
-  --env-file "${_env_path}" --entrypoint /bin/sh "${_image}"
+  --env-file "${_env_path}" --entrypoint /bin/bash "${_image}"
 else
   echo " "
   echo "Did not find docker. Run this command:"
   echo "docker run --rm -v \"${_volume}\":\"${_mountpoint}\":ro \\"
-  echo "--env-file \"${_env_path}\" --entrypoint /bin/sh \"${_image}\""
+  echo "--env-file \"${_env_path}\" --entrypoint /bin/bash \"${_image}\""
   echo " "
 fi

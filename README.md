@@ -8,7 +8,7 @@ DNS config for solvahol domains:
 
 Please:
 
-- Before making changes, run `script/update` and `script/setup`.
+- Before making changes, run `script/bootstrap` and `script/setup`.
 - After making changes, run `script/test` and address any issues.
 - Changes will be deployed automatically when they're pushed to `master`.
 - Refer to [**github/octodns**](https://github.com/github/octodns) documentation and source to learn about the `.yaml` files.

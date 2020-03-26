@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Test changes to DNS config
-        uses: solvaholic/octodns-action@version2
+        uses: solvaholic/octodns-sync@v2
         with:
           config_path: public.yaml
   deploy:
@@ -31,7 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Deploy changes to DNS config
-        uses: solvaholic/octodns-action@version2
+        uses: solvaholic/octodns-sync@v2
         with:
           config_path: public.yaml
           doit: --doit

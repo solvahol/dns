@@ -1,0 +1,37 @@
+name: octodns-sync
+
+on:
+  # Run when DNS changes are pushed to main
+  push:
+    branches:
+      - main
+    paths:
+      - '*.yaml'
+  # Run when manually triggered
+  workflow_dispatch:
+    inputs:
+      doit:
+        description: 'Really do it? Set "--doit" to do it, or empty string to not do it.'
+        required: true
+        default: ''
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.route53_aws_key_id }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.route53_aws_secret_access_key }}
+
+jobs:
+  octodns-sync:
+    name: Test and deploy changes to DNS config
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test changes to DNS config
+        uses: solvaholic/octodns-sync@v2
+        with:
+          config_path: public.yaml
+      - name: Deploy changes to DNS config
+        if: ${{ github.event.inputs.doit }} == '--doit'
+        uses: solvaholic/octodns-sync@v2
+        with:
+          config_path: public.yaml
+          doit: --doit

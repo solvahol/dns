@@ -8,22 +8,27 @@ DNS config for solvahol domains:
 
 Please:
 
-- Before making changes, run `script/bootstrap` and `script/setup`.
-- After making changes, run `script/test` and address any issues.
-- Changes will be deployed automatically when they're pushed to `master`.
-- Refer to [**github/octodns**](https://github.com/github/octodns) documentation and source to learn about the `.yaml` files.
+- Before making changes, run [`script/bootstrap`] and [`script/setup`].
+- After making changes, run [`script/test`] and address any issues.
+- Refer to [**github/octodns**] documentation and source to learn about the `.yaml` files.
 
-**_Add or change records in an existing domain:_**
+### Add or change records in an existing domain
 
 1. Edit `<domain>.yaml`.
 
-**_Add a new domain:_**
+### Add a new domain
 
 1. Update the top section of this README.
 1. Create `<domain>.yaml`.
 1. Add the new domain to `public.yaml`.
 
-**_Add a new DNS provider:_**
+### Add a new DNS provider
 
 1. Add credentials to `.env` and add GitHub secrets.
 1. Update `public.yaml`.
+
+
+[`script/bootstrap`]: <https://github.com/solvahol/dns/blob/main/script/bootstrap>
+[`script/setup`]: <https://github.com/solvahol/dns/blob/main/script/setup>
+[`script/test`]: <https://github.com/solvahol/dns/blob/main/script/test>
+[**github/octodns**]: <https://github.com/github/octodns>

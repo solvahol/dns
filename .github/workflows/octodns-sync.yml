@@ -47,7 +47,7 @@ jobs:
           env: public
 
       - name: Deploy DNS config changes
-        if: ${{ steps.deployment.outputs.deployment_id > "" }}
+        if: ${{ steps.deployment.outputs.deployment_id != 0 }}
         uses: solvaholic/octodns-sync@main
         with:
           config_path: ${{ steps.deployment.outputs.env }}.yaml
@@ -57,7 +57,7 @@ jobs:
         # TODO: Run octodns-sync to confirm no changes to be made
 
       - name: Finish deployment
-        if: ${{ steps.deployment.outputs.deployment_id > "" }}
+        if: ${{ steps.deployment.outputs.deployment_id != 0 }}
         uses: bobheadxi/deployments@v0.6.0
         with:
           step: finish

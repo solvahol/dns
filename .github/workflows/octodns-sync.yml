@@ -18,25 +18,25 @@ on:
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.route53_aws_key_id }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.route53_aws_secret_access_key }}
+  CONFIG_TO_USE: public.yaml
 
 jobs:
   octodns-sync:
     name: Test and deploy changes to DNS config
     runs-on: ubuntu-20.04
-    environment: production
     steps:
 
       - name: Checkout the configuration repository
         uses: actions/checkout@v2
 
-      - name: Validate DNS config, and plan for changes
-        uses: solvaholic/octodns-sync@main
+      - name: Validate ${{ env.CONFIG_TO_USE }}, and plan for changes
+        uses: solvaholic/octodns-sync@b6675ce446abc9edcc2cb87575c9ac5e53811261
         # TODO: When no changes, skip the rest of this workflow?
         with:
-          config_path: public.yaml
+          config_path: ${{ env.CONFIG_TO_USE }}
           # TODO: Add PR comment
 
-      - name: Start deployment
+      - name: Start deployment for ${{ env.CONFIG_TO_USE }}
         if: ${{ github.event.inputs.doit == '--doit' }}
         id: deployment
         uses: bobheadxi/deployments@v0.6.0
@@ -44,19 +44,20 @@ jobs:
           step: start
           token: ${{ secrets.GITHUB_TOKEN }}
           deployment_id: ${{ github.event.deployment.id }}
-          env: public
+          # Note: This 'env' :point_down: is not a job or step env
+          env: ${{ env.CONFIG_TO_USE }}
 
-      - name: Deploy DNS config changes
+      - name: Deploy ${{ env.CONFIG_TO_USE }}
         if: ${{ steps.deployment.outputs.deployment_id != 0 }}
-        uses: solvaholic/octodns-sync@main
+        uses: solvaholic/octodns-sync@b6675ce446abc9edcc2cb87575c9ac5e53811261
         with:
-          config_path: ${{ steps.deployment.outputs.env }}.yaml
+          config_path: ${{ env.CONFIG_TO_USE }}
           doit: Not this time
 
       # name: Test the deployed DNS config
         # TODO: Run octodns-sync to confirm no changes to be made
 
-      - name: Finish deployment
+      - name: Finish deployment for ${{ env.CONFIG_TO_USE }}
         if: ${{ steps.deployment.outputs.deployment_id != 0 }}
         uses: bobheadxi/deployments@v0.6.0
         with:

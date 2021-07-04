@@ -13,7 +13,7 @@ on:
       doit:
         description: 'Really do it? Set "--doit" to do it, or another string to not do it.'
         required: true
-        default: ''
+        default: 'No'
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.route53_aws_key_id }}
@@ -23,15 +23,43 @@ jobs:
   octodns-sync:
     name: Test and deploy changes to DNS config
     runs-on: ubuntu-20.04
+    environment: production
     steps:
-      - uses: actions/checkout@v2
-      - name: Test changes to DNS config
-        uses: solvaholic/octodns-sync@v2
+
+      - name: Checkout the configuration repository
+        uses: actions/checkout@v2
+
+      - name: Validate DNS config, and plan for changes
+        uses: solvaholic/octodns-sync@main
+        # TODO: When no changes, skip the rest of this workflow?
         with:
           config_path: public.yaml
-      - name: Deploy changes to DNS config
+          # TODO: Add PR comment
+
+      - name: Start deployment
         if: ${{ github.event.inputs.doit == '--doit' }}
-        uses: solvaholic/octodns-sync@v2
+        id: deployment
+        uses: bobheadxi/deployments@v0.6.0
         with:
-          config_path: public.yaml
-          doit: --doit
+          step: start
+          token: ${{ secrets.GITHUB_TOKEN }}
+          deployment_id: ${{ github.event.deployment.id }}
+          env: public
+
+      - name: Deploy DNS config changes
+        if: ${{ steps.deployment.outputs.deployment_id > "" }}
+        uses: solvaholic/octodns-sync@main
+        with:
+          config_path: ${{ steps.deployment.outputs.env }}.yaml
+          doit: Not this time
+
+      # name: Test the deployed DNS config
+        # TODO: Run octodns-sync to confirm no changes to be made
+
+      - name: Finish deployment
+        if: ${{ steps.deployment.outputs.deployment_id > "" }}
+        uses: bobheadxi/deployments@v0.6.0
+        with:
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}

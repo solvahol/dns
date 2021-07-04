@@ -1,10 +1,8 @@
 name: octodns-sync
 
 on:
-  # Run when DNS changes are pushed to main
+  # Run when DNS changes are pushed to any branch
   push:
-    branches:
-      - main
     paths:
       - '*.yaml'
   # Run when manually triggered
@@ -36,7 +34,7 @@ jobs:
           config_path: ${{ env.CONFIG_TO_USE }}
           # TODO: Add PR comment
 
-      - name: Start deployment for ${{ env.CONFIG_TO_USE }}
+      - name: Start ${{ env.CONFIG_TO_USE }} deployment
         if: ${{ github.event.inputs.doit == '--doit' }}
         id: deployment
         uses: bobheadxi/deployments@v0.6.0
@@ -47,7 +45,7 @@ jobs:
           # Note: This 'env' :point_down: is not a job or step env
           env: ${{ env.CONFIG_TO_USE }}
 
-      - name: Deploy ${{ env.CONFIG_TO_USE }}
+      - name: Deploy ${{ env.CONFIG_TO_USE }} (`--doit`)
         if: ${{ steps.deployment.outputs.deployment_id != 0 }}
         uses: solvaholic/octodns-sync@b6675ce446abc9edcc2cb87575c9ac5e53811261
         with:
@@ -57,7 +55,7 @@ jobs:
       # name: Test the deployed DNS config
         # TODO: Run octodns-sync to confirm no changes to be made
 
-      - name: Finish deployment for ${{ env.CONFIG_TO_USE }}
+      - name: Finish ${{ env.CONFIG_TO_USE }} deployment
         if: ${{ steps.deployment.outputs.deployment_id != 0 }}
         uses: bobheadxi/deployments@v0.6.0
         with:

@@ -62,3 +62,4 @@ jobs:
           step: finish
           token: ${{ secrets.GITHUB_TOKEN }}
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          status: ${{ job.status }}

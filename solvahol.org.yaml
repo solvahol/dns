@@ -24,7 +24,7 @@ us64:
       - flags: 0
         tag: issue
         value: letsencrypt.org
-vvv:
+uuu:
   type: CNAME
   value: us64.solvahol.org.
 www:

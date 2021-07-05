@@ -24,14 +24,15 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
 
-      - id: meta
+      - name: Parse event data into outputs
+        id: meta
         run: |
           # Set $_sha to the first 7 char of PR head SHA
           _sha="$(echo "${{ github.event.pull_request.head.sha }}" | cut -c 1-7)"
           # Set output 'sha' to $_sha
           echo "::set-output name=sha::${_sha}"
 
-      - name: Checkout ${{ github.repository }} from ${{ github.repository }}
+      - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v2
 
       - name: Validate ${{ env.CONFIG_TO_USE }}, and plan for changes
@@ -42,6 +43,7 @@ jobs:
           config_path: ${{ env.CONFIG_TO_USE }}
 
       - name: Find comment
+        if: ${{ github.event_name == 'pull_request' }}
         uses: peter-evans/find-comment@v1.2.0
         id: fc
         with:

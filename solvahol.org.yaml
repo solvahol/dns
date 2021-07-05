@@ -25,7 +25,7 @@ us64:
         tag: issue
         value: letsencrypt.org
 
-wvv:
+wuu:
   type: CNAME
   value: us64.solvahol.org.
   

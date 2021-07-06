@@ -14,8 +14,6 @@ on:
         default: 'No'
 
 env:
-  AWS_ACCESS_KEY_ID: ${{ secrets.route53_aws_key_id }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.route53_aws_secret_access_key }}
   CONFIG_TO_USE: public.yaml
 
 jobs:
@@ -36,10 +34,13 @@ jobs:
 
       - name: Validate ${{ env.CONFIG_TO_USE }}, and plan for changes
         id: validate
-        uses: solvaholic/octodns-sync@b6675ce446abc9edcc2cb87575c9ac5e53811261
+        uses: solvaholic/octodns-sync@issue70
         # TODO: When no changes, skip the rest of this workflow?
         with:
           config_path: ${{ env.CONFIG_TO_USE }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.route53_aws_key_id }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.route53_aws_secret_access_key }}
 
       - name: Find comment
         if: ${{ github.event_name == 'pull_request' }}
@@ -78,10 +79,13 @@ jobs:
 
       - name: Deploy ${{ env.CONFIG_TO_USE }} (`--doit`)
         if: ${{ steps.deployment.outputs.deployment_id != 0 }}
-        uses: solvaholic/octodns-sync@b6675ce446abc9edcc2cb87575c9ac5e53811261
+        uses: solvaholic/octodns-sync@issue70
         with:
           config_path: ${{ env.CONFIG_TO_USE }}
           doit: Not this time
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.route53_aws_key_id }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.route53_aws_secret_access_key }}
 
       # name: Test ${{ env.CONFIG_TO_USE }} deployment
         # TODO: Run octodns-sync to confirm no changes to be made?

@@ -54,7 +54,7 @@ jobs:
       - name: 'doit: The .doit event input, if present'
         id: doit
         run: |
-          if [ "${{ github.event.inputs.doit }}" = "--doit"]; then
+          if [ "${{ github.event.inputs.doit }}" = "--doit" ]; then
             _doit="--doit"
           else
             _doit="No"
@@ -63,7 +63,7 @@ jobs:
       - name: 'ref: The Git ref to read config from'
         id: get-ref
         run: |
-          if [ "${{ github.event_name }}" = "pull_request_target"]; then
+          if [ "${{ github.event_name }}" = "pull_request_target" ]; then
             _ref=refs/pull/${{ github.event.pull_request.number }}/head
           else
             _ref=${{ github.ref }}

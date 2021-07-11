@@ -72,7 +72,8 @@ jobs:
       - name: 'sha: A short SHA of the commit to read config from'
         id: get-sha
         run: |
-          _sha=$(git show-ref --hash=8 ${{ steps.get-ref.outputs.ref }})
+          git fetch origin ${{ steps.get-ref.outputs.ref }}
+          _sha=$(git show-ref --hash=8 FETCH_HEAD)
           echo "::set-output name=sha::${_sha}"
 
   validate:

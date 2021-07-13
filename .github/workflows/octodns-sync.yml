@@ -86,11 +86,14 @@ jobs:
       - name: 'ref: The Git ref to read config from'
         id: get-ref
         run: |
-          if [ "${{ github.event_name }}" = "pull_request_target" ]; then
-            _ref=refs/pull/${{ github.event.pull_request.number }}/head
-          else
-            _ref=${{ github.ref }}
-          fi
+          case "${{ github.event_name }}" in
+            "pull_request_target")
+              _ref=refs/pull/${{ github.event.pull_request.number }}/merge ;;
+            "issue_comment")
+              _ref=refs/pull/${{ github.event.issue.number }}/merge ;;
+            *)
+              _ref=${{ github.ref }}
+          esac
           echo "::set-output name=ref::${_ref}"
       - name: 'sha: A short SHA of the commit to read config from'
         id: get-sha

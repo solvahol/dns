@@ -1,0 +1,137 @@
+name: octodns-sync
+
+on:
+  # Run when manually triggered
+  workflow_dispatch:
+    inputs:
+      doit:
+        description: 'Really do it? Set "--doit" to do it, or another string to not do it.'
+        required: true
+        default: 'No'
+
+  # Run when an issue comment is created
+  issue_comment:
+    types: [created]
+
+permissions:
+  actions: read
+  checks: write
+  contents: read
+  deployments: write
+  issues: write
+  packages: read
+  pull-requests: write
+  repository-projects: read
+  security-events: read
+  statuses: write
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  CONFIG_TO_USE: public.yaml
+
+jobs:
+
+  slashcom:
+    name: Check comment for slash commands
+    runs-on: ubuntu-20.04
+    outputs:
+      command: ${{ steps.command.outputs.command-name }}
+    steps:
+      - name: Check comments for /deploy
+        id: command
+        uses: xt0rted/slash-command-action@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          command: deploy
+          reaction-type: rocket
+          allow-edits: "false"
+          permission-level: admin
+
+  meta:
+    name: Parse event data into outputs
+    needs: slashcom
+    runs-on: ubuntu-20.04
+    outputs:
+      config: ${{ steps.which-config.outputs.config }}
+      doit: ${{ steps.doit.outputs.doit }}
+      ref: ${{ steps.get-ref.outputs.ref }}
+      sha: ${{ steps.get-sha.outputs.sha }}
+    steps:
+      - name: Checkout ${{ github.repository }}:${{ github.ref }}
+        uses: actions/checkout@v2
+      - name: 'which-config: Which config file to run?'
+        id: which-config
+        run: |
+          _config="${{ env.CONFIG_TO_USE }}"
+          echo "::set-output name=config::${_config}"
+      - name: 'doit: The .doit event input, if present'
+        id: doit
+        run: |
+          if [ "${{ github.event.inputs.doit }}" = "--doit" ]; then
+            _doit="--doit"
+          elif [ "${{ needs.slashcom.outputs.command }}" = "deploy" ]; then
+            _doit="--doit"
+          else
+            _doit="No"
+          fi
+          echo "::set-output name=doit::${_doit}"
+      - name: 'ref: The Git ref to read config from'
+        id: get-ref
+        run: |
+          case "${{ github.event_name }}" in
+            "pull_request_target")
+              _ref=refs/pull/${{ github.event.pull_request.number }}/merge ;;
+            "issue_comment")
+              _ref=refs/pull/${{ github.event.issue.number }}/merge ;;
+            *)
+              _ref=${{ github.ref }}
+          esac
+          echo "::set-output name=ref::${_ref}"
+      - name: 'sha: A short SHA of the commit to read config from'
+        id: get-sha
+        run: |
+          git fetch origin ${{ steps.get-ref.outputs.ref }}
+          _sha=$(cut -c 1-8 .git/FETCH_HEAD)
+          echo "::set-output name=sha::${_sha}"
+
+  deploy:
+    name: Deploy ${{ needs.meta.outputs.config }}
+    needs: [meta]
+    environment: deploy
+    if: ${{ needs.meta.outputs.doit == '--doit' }}
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout ${{ github.repository }}:${{ github.ref }}
+        uses: actions/checkout@v2
+      - name: Start ${{ needs.meta.outputs.config }} deployment
+        id: deployment
+        uses: bobheadxi/deployments@v0.6.0
+        with:
+          step: start
+          token: ${{ secrets.GITHUB_TOKEN }}
+          deployment_id: ${{ github.event.deployment.id }}
+          # Note: This 'env' :point_down: is not a job or step env
+          env: ${{ needs.meta.outputs.config }}
+      - name: Run `octodns-sync` to deploy ${{ needs.meta.outputs.config }}
+        if: ${{ steps.deployment.outputs.deployment_id != 0 }}
+        id: octodns-sync
+        uses: solvaholic/octodns-sync@issue70
+        with:
+          config_path: ${{ needs.meta.outputs.config }}
+          doit: Not this time
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.route53_aws_key_id }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.route53_aws_secret_access_key }}
+      # name: Test ${{ needs.meta.outputs.config }} deployment
+        # TODO: Run octodns-sync to confirm no changes to be made?
+      - name: Finish ${{ needs.meta.outputs.config }} deployment
+        if: ${{ steps.deployment.outputs.deployment_id != 0 }}
+        uses: bobheadxi/deployments@v0.6.0
+        with:
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          status: ${{ job.status }}

@@ -1,4 +1,4 @@
-name: octodns-sync
+name: octodns-sync --doit
 
 on:
   # Run when manually triggered
@@ -106,6 +106,20 @@ jobs:
     steps:
       - name: Checkout ${{ github.repository }}:${{ github.ref }}
         uses: actions/checkout@v2
+      - name: Checkout config files from ${{ needs.meta.outputs.ref }}
+        if: ${{ github.ref != needs.meta.outputs.ref }}
+        run: |
+          # Fetch ref
+          git fetch origin ${{ needs.meta.outputs.ref }}
+          # List changed config files in ref
+          _files="$(git diff --name-only HEAD FETCH_HEAD | \
+                  grep "\.yaml$" | \
+                  grep -v "^.github/")"
+          # Checkout config files from ref
+          if [ -n "$_files" ]; then
+            # Note: If no .yaml files were changed, this will not run
+            git checkout FETCH_HEAD -- $_files
+          fi
       - name: Start ${{ needs.meta.outputs.config }} deployment
         id: deployment
         uses: bobheadxi/deployments@v0.6.0

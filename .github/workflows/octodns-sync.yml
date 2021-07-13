@@ -4,7 +4,7 @@ on:
   # Run when changes are pushed to any pull request
   pull_request_target:
   # Note: Running workflows on pull_request_target can be dangerous!
-  # https://docs.github.com/actions/reference/events-that-trigger-workflows#pull_request_target
+  # https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
 
   # Run when manually triggered
   workflow_dispatch:
@@ -13,6 +13,10 @@ on:
         description: 'Really do it? Set "--doit" to do it, or another string to not do it.'
         required: true
         default: 'No'
+
+  # Run when an issue comment is created
+  issue_comment:
+    types: [created]
 
 permissions:
   actions: read
@@ -35,8 +39,25 @@ env:
 
 jobs:
 
+  slashcom:
+    name: Check comment for slash commands
+    runs-on: ubuntu-20.04
+    outputs:
+      command: ${{ steps.command.outputs.command-name }}
+    steps:
+      - name: Check comments for /deploy
+        id: command
+        uses: xt0rted/slash-command-action@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          command: deploy
+          reaction-type: rocket
+          allow-edits: "false"
+          permission-level: admin
+
   meta:
     name: Parse event data into outputs
+    needs: slashcom
     runs-on: ubuntu-20.04
     outputs:
       config: ${{ steps.which-config.outputs.config }}
@@ -55,6 +76,8 @@ jobs:
         id: doit
         run: |
           if [ "${{ github.event.inputs.doit }}" = "--doit" ]; then
+            _doit="--doit"
+          elif [ "${{ needs.slashcom.outputs.command }}" = "deploy" ]; then
             _doit="--doit"
           else
             _doit="No"
@@ -151,7 +174,7 @@ jobs:
         uses: bobheadxi/deployments@v0.6.0
         with:
           step: start
-          token: ${{ github.token }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           deployment_id: ${{ github.event.deployment.id }}
           # Note: This 'env' :point_down: is not a job or step env
           env: ${{ needs.meta.outputs.config }}
@@ -172,6 +195,6 @@ jobs:
         uses: bobheadxi/deployments@v0.6.0
         with:
           step: finish
-          token: ${{ github.token }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
           status: ${{ job.status }}

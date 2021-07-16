@@ -120,17 +120,7 @@ jobs:
             # Note: If no .yaml files were changed, this will not run
             git checkout FETCH_HEAD -- $_files
           fi
-      - name: Start ${{ needs.meta.outputs.config }} deployment
-        id: deployment
-        uses: bobheadxi/deployments@v0.6.0
-        with:
-          step: start
-          token: ${{ secrets.GITHUB_TOKEN }}
-          deployment_id: ${{ github.event.deployment.id }}
-          # Note: This 'env' :point_down: is not a job or step env
-          env: ${{ needs.meta.outputs.config }}
       - name: Run `octodns-sync` to deploy ${{ needs.meta.outputs.config }}
-        if: ${{ steps.deployment.outputs.deployment_id != 0 }}
         id: octodns-sync
         uses: solvaholic/octodns-sync@issue70
         with:
@@ -141,11 +131,3 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.route53_aws_secret_access_key }}
       # name: Test ${{ needs.meta.outputs.config }} deployment
         # TODO: Run octodns-sync to confirm no changes to be made?
-      - name: Finish ${{ needs.meta.outputs.config }} deployment
-        if: ${{ steps.deployment.outputs.deployment_id != 0 }}
-        uses: bobheadxi/deployments@v0.6.0
-        with:
-          step: finish
-          token: ${{ secrets.GITHUB_TOKEN }}
-          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-          status: ${{ job.status }}

@@ -90,7 +90,7 @@ jobs:
           fi
       - name: Run `octodns-sync` with ${{ needs.meta.outputs.config }}
         id: octodns-sync
-        uses: solvaholic/octodns-sync@issue70
+        uses: solvaholic/octodns-sync@main
         # TODO: When no changes, skip the rest of this workflow?
         with:
           config_path: ${{ needs.meta.outputs.config }}

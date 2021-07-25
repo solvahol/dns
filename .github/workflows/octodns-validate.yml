@@ -78,19 +78,21 @@ jobs:
         if: ${{ github.ref != needs.meta.outputs.ref }}
         run: |
           # Fetch ref
-          git fetch origin ${{ needs.meta.outputs.ref }}
+          _ref=${{ needs.meta.outputs.ref }}
+          git fetch origin ${_ref}
           # List changed config files in ref
           _files="$(git diff --name-only HEAD FETCH_HEAD | \
                   grep "\.yaml$" | \
                   grep -v "^.github/")"
           # Checkout config files from ref
           if [ -n "$_files" ]; then
-            # Note: If no .yaml files were changed, this will not run
             git checkout FETCH_HEAD -- $_files
+          else
+            echo "SKIP: No config files changed, in ${_ref}."
           fi
       - name: Run `octodns-sync` with ${{ needs.meta.outputs.config }}
         id: octodns-sync
-        uses: solvaholic/octodns-sync@issue70
+        uses: solvaholic/octodns-sync@main
         # TODO: When no changes, skip the rest of this workflow?
         with:
           config_path: ${{ needs.meta.outputs.config }}

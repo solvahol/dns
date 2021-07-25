@@ -122,7 +122,7 @@ jobs:
           fi
       - name: Run `octodns-sync` to deploy ${{ needs.meta.outputs.config }}
         id: octodns-sync
-        uses: solvaholic/octodns-sync@issue70
+        uses: solvaholic/octodns-sync@main
         with:
           config_path: ${{ needs.meta.outputs.config }}
           doit: Not this time

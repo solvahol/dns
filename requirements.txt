@@ -1,1 +1,0 @@
-git+http://github.com/octodns/octodns@v0.9.13#egg=octodns

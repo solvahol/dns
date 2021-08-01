@@ -81,11 +81,10 @@ jobs:
           _ref=${{ needs.meta.outputs.ref }}
           git fetch origin ${_ref}
           # List changed config files in ref
-          _files="$(git diff --name-only HEAD FETCH_HEAD | \
+          if _files="$(git diff --name-only HEAD FETCH_HEAD | \
                   grep "\.yaml$" | \
-                  grep -v "^.github/")"
-          # Checkout config files from ref
-          if [ -n "$_files" ]; then
+                  grep -v "^.github/")"; then
+            # Checkout config files from ref
             git checkout FETCH_HEAD -- $_files
           else
             echo "SKIP: No config files changed, in ${_ref}."

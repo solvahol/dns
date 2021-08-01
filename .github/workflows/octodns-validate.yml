@@ -3,10 +3,10 @@ name: octodns-sync
 on:
   # Run when changes are pushed to any pull request
   pull_request_target:
+    paths:
+      - '*.yaml'
   # Note: Running workflows on pull_request_target can be dangerous!
   # https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
-  paths:
-    - '*.yaml'
 
   # Run when manually triggered
   workflow_dispatch:

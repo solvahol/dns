@@ -11,7 +11,7 @@ cd "$(git rev-parse --show-toplevel)" || \
 echo "WARN: Unable to cd to repository root."
 
 # Required commands are available.
-for _thiscmd in git python3 yamllint shellcheck; do
+for _thiscmd in docker git; do
   command -v ${_thiscmd} >/dev/null 2>&1 || echo "WARN: Missing ${_thiscmd}."
 done
 

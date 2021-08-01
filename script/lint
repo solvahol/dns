@@ -1,0 +1,45 @@
+#!/bin/sh
+
+#
+# Use these scripts when developing and linting changes to solvahol/dns.
+#
+# - script/lint: Lint this version of the configuration.
+#
+
+# Change directory to the root of this repository.
+cd "$(git rev-parse --show-toplevel)" || return
+
+# Set environment variables.
+. ./.config
+
+## shellcheck
+echo "Linting all the shell things..."
+if command -v docker >/dev/null 2>&1; then
+  docker run --rm -v "${_volume}":"${_mountpoint}":ro \
+  --entrypoint /usr/bin/shellcheck --workdir "${_mountpoint}" \
+  "${_image}" -x ./script/*
+else
+  echo " "
+  echo "Did not find docker. Run this command:"
+  echo "docker run --rm -v \"${_volume}\":\"${_mountpoint}\":ro \\"
+  echo "--entrypoint /usr/bin/shellcheck --workdir \"${_mountpoint}\" \\"
+  echo "\"${_image}\"" ./script/*
+  echo " "
+fi
+echo "All the shell things linted!"
+
+## yamllint
+echo "Linting all the YAML things..."
+if command -v docker >/dev/null 2>&1; then
+  docker run --rm -v "${_volume}":"${_mountpoint}":ro \
+  --entrypoint /usr/local/bin/yamllint \
+  "${_image}" --no-warnings "${_mountpoint}"
+else
+  echo " "
+  echo "Did not find docker. Run this command:"
+  echo "docker run --rm -v \"${_volume}\":\"${_mountpoint}\":ro \\"
+  echo "--entrypoint /usr/local/bin/yamllint \\"
+  echo "\"${_image}\" --no-warnings \"${_mountpoint}\""
+  echo " "
+fi
+echo "All the YAML things linted!"

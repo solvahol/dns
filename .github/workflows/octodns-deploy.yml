@@ -5,7 +5,9 @@ on:
   workflow_dispatch:
     inputs:
       doit:
-        description: 'Really do it? Set "--doit" to do it, or another string to not do it.'
+        description: |
+          Really do it? Set "--doit" to do it, or another string
+          to not do it.
         required: true
         default: 'No'
 

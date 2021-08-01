@@ -11,12 +11,12 @@ cd "$(git rev-parse --show-toplevel)" || \
 echo "WARN: Unable to cd to repository root."
 
 # Required commands are available.
-for _thiscmd in git python3 yamllint shellcheck; do
+for _thiscmd in docker git; do
   command -v ${_thiscmd} >/dev/null 2>&1 || echo "WARN: Missing ${_thiscmd}."
 done
 
 # Required files are present, readable, and not empty.
-for _thisfile in requirements.txt public.yaml .config; do
+for _thisfile in public.yaml .config; do
   if [ ! -s "${_thisfile}" ] && [ ! -r "${_thisfile}" ]; then
     echo "WARN: Missing ${_thisfile}."
   fi

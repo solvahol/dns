@@ -12,6 +12,9 @@
     values:
       - priority: 10
         value: mail.solvahol.org.
+_mythic-beasts-challenge:
+  - type: TXT
+    value: 5lxZOR9D8o8Qhmqjl7MkyZ50crDfQeW7zVcf+t30kmQ
 mail:
   type: CNAME
   value: us64.solvahol.org.

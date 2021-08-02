@@ -10,8 +10,8 @@ providers:
     directory: .
   mythicbeasts:
     class: octodns.provider.mythicbeasts.MythicBeastsProvider
-      passwords:
-        solvahol.org.: env/MYTHIC_BEASTS_SECRET
+    passwords:
+      solvahol.org.: env/MYTHIC_BEASTS_SECRET
   route53:
     class: octodns.provider.route53.Route53Provider
     access_key_id: env/AWS_ACCESS_KEY_ID

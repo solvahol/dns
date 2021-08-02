@@ -69,7 +69,7 @@ jobs:
   validate:
     name: Validate ${{ needs.meta.outputs.config }}, plan for changes
     needs: meta
-    environment: validate
+    environment: test
     runs-on: ubuntu-20.04
     outputs:
       plan: ${{ steps.octodns-sync.outputs.plan }}

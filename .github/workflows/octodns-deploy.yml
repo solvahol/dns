@@ -102,7 +102,7 @@ jobs:
   deploy:
     name: Deploy ${{ needs.meta.outputs.config }}
     needs: [meta]
-    environment: deploy
+    environment: prod
     if: ${{ needs.meta.outputs.doit == '--doit' }}
     runs-on: ubuntu-20.04
     steps:

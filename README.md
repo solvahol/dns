@@ -9,7 +9,7 @@ DNS config for solvahol domains:
 Please:
 
 - Before making changes, run [`script/bootstrap`] and address any issues.
-- After making changes, run [`script/test`] and address any issues.
+- After making changes, run [`script/lint`] and address any issues.
 - Refer to [**octodns/octodns**] documentation and source to learn about the `.yaml` files.
 
 ### Add or change records in an existing domain
@@ -29,5 +29,5 @@ Please:
 
 
 [`script/bootstrap`]: <https://github.com/solvahol/dns/blob/main/script/bootstrap>
-[`script/test`]: <https://github.com/solvahol/dns/blob/main/script/test>
+[`script/lint`]: <https://github.com/solvahol/dns/blob/main/script/lint>
 [**octodns/octodns**]: <https://github.com/octodns/octodns>

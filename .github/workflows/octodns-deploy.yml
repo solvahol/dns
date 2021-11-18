@@ -128,8 +128,10 @@ jobs:
         with:
           config_path: ${{ needs.meta.outputs.config }}
           doit: --doit
+          octodns_ref: master
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.route53_aws_key_id }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.route53_aws_secret_access_key }}
+          MYTHIC_BEASTS_PASSWORD: ${{ secrets.mythic_beasts_password }}
       # name: Test ${{ needs.meta.outputs.config }} deployment
         # TODO: Run octodns-sync to confirm no changes to be made?

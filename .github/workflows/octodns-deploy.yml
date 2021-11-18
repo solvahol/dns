@@ -127,6 +127,7 @@ jobs:
         uses: solvaholic/octodns-sync@main
         with:
           config_path: ${{ needs.meta.outputs.config }}
+          octodns_ref: master
           doit: --doit
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.route53_aws_key_id }}

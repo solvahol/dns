@@ -12,6 +12,13 @@ providers:
     class: octodns.provider.route53.Route53Provider
     access_key_id: env/AWS_ACCESS_KEY_ID
     secret_access_key: env/AWS_SECRET_ACCESS_KEY
+  azuredns:
+    class: octodns.provider.azuredns.AzureProvider
+    client_id: env/AZURE_APPLICATION_ID
+    key: env/AZURE_AUTHENTICATION_KEY
+    directory_id: env/AZURE_DIRECTORY_ID
+    sub_id: env/AZURE_SUBSCRIPTION_ID
+    resource_group: 'solvahol.org'
 
 zones:
   solvahol.org.:
@@ -19,3 +26,4 @@ zones:
       - config
     targets:
       - route53
+      - azuredns

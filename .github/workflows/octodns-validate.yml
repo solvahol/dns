@@ -101,7 +101,10 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.route53_aws_key_id }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.route53_aws_secret_access_key }}
-          MYTHIC_BEASTS_PASSWORD: ${{ secrets.mythic_beasts_password }}
+          AZURE_APPLICATION_ID: ${{ secrets.azure_application_id }}
+          AZURE_AUTHENTICATION_KEY: ${{ secrets.azure_authentication_key }}
+          AZURE_DIRECTORY_ID: ${{ secrets.azure_directory_id }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.azure_subscription_id }}
 
   comment:
     name: Add ${{ needs.meta.outputs.config }} plan to PR comment

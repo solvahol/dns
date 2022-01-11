@@ -16,6 +16,7 @@ cd "$(git rev-parse --show-toplevel)" || return
 echo "Linting all the shell things..."
 if command -v docker >/dev/null 2>&1; then
   docker run --rm -v "${_volume}":"${_mountpoint}":ro \
+  -e RUN_LOCAL=true \
   --entrypoint /usr/bin/shellcheck --workdir "${_mountpoint}" \
   "${_image}" -x ./script/*
 else
@@ -32,6 +33,7 @@ echo "All the shell things linted!"
 echo "Linting all the YAML things..."
 if command -v docker >/dev/null 2>&1; then
   docker run --rm -v "${_volume}":"${_mountpoint}":ro \
+  -e RUN_LOCAL=true \
   --entrypoint /usr/local/bin/yamllint \
   "${_image}" --no-warnings "${_mountpoint}"
 else

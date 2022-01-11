@@ -128,7 +128,7 @@ jobs:
         with:
           config_path: ${{ needs.meta.outputs.config }}
           doit: --doit
-          octodns_ref: master
+          octodns_ref: v0.9.14
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.route53_aws_key_id }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.route53_aws_secret_access_key }}

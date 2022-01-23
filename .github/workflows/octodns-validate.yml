@@ -91,13 +91,17 @@ jobs:
           else
             echo "SKIP: No config files changed, in ${_ref}."
           fi
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
       - name: Run `octodns-sync` with ${{ needs.meta.outputs.config }}
         id: octodns-sync
         uses: solvaholic/octodns-sync@main
         # TODO: When no changes, skip the rest of this workflow?
         with:
           config_path: ${{ needs.meta.outputs.config }}
-          octodns_ref: v0.9.14
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.route53_aws_key_id }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.route53_aws_secret_access_key }}

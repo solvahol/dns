@@ -1,0 +1,2 @@
+octodns==0.9.14
+octodns_route53==0.0.2

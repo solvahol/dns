@@ -2,3 +2,4 @@ octodns==0.9.14
 octodns_route53==0.0.2
 boto3==1.20.26
 octodns_azure==0.0.1
+msrestazure==0.6.4

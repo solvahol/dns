@@ -63,7 +63,7 @@ jobs:
       sha: ${{ steps.get-sha.outputs.sha }}
     steps:
       - name: Checkout ${{ github.repository }}:${{ github.ref }}
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: 'which-config: Which config file to run?'
         id: which-config
         run: |
@@ -107,7 +107,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout ${{ github.repository }}:${{ github.ref }}
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Checkout config files from ${{ needs.meta.outputs.ref }}
         if: ${{ github.ref != needs.meta.outputs.ref }}
         run: |

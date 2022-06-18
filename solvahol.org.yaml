@@ -2,7 +2,7 @@
 '':
   - type: A
     values:
-      - 34.239.233.24
+      - 46.23.89.146
   - type: CAA
     values:
       - flags: 0
@@ -12,18 +12,18 @@
     values:
       - priority: 10
         value: mail.solvahol.org.
-mail:
-  type: CNAME
-  value: us64.solvahol.org.
-us64:
+ams01:
   - type: A
     values:
-      - 34.239.233.24
+      - 46.23.89.146
   - type: CAA
     values:
       - flags: 0
         tag: issue
         value: letsencrypt.org
+mail:
+  type: CNAME
+  value: ams01.solvahol.org.
 www:
   type: CNAME
-  value: us64.solvahol.org.
+  value: ams01.solvahol.org.

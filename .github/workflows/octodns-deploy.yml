@@ -11,10 +11,6 @@ on:
         required: true
         default: 'No'
 
-  # Run when an issue comment is created
-  issue_comment:
-    types: [created]
-
 permissions:
   actions: read
   checks: write
@@ -36,25 +32,8 @@ env:
 
 jobs:
 
-  slashcom:
-    name: Check comment for slash commands
-    runs-on: ubuntu-20.04
-    outputs:
-      command: ${{ steps.command.outputs.command-name }}
-    steps:
-      - name: Check comments for /deploy
-        id: command
-        uses: xt0rted/slash-command-action@v1
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          command: deploy
-          reaction-type: rocket
-          allow-edits: "false"
-          permission-level: admin
-
   meta:
     name: Parse event data into outputs
-    needs: slashcom
     runs-on: ubuntu-20.04
     outputs:
       config: ${{ steps.which-config.outputs.config }}
@@ -108,27 +87,17 @@ jobs:
     steps:
       - name: Checkout ${{ github.repository }}:${{ github.ref }}
         uses: actions/checkout@v3
-      - name: Checkout config files from ${{ needs.meta.outputs.ref }}
-        if: ${{ github.ref != needs.meta.outputs.ref }}
-        run: |
-          # Fetch ref
-          git fetch origin ${{ needs.meta.outputs.ref }}
-          # List changed config files in ref
-          _files="$(git diff --name-only HEAD FETCH_HEAD | \
-                  grep "\.yaml$" | \
-                  grep -v "^.github/")"
-          # Checkout config files from ref
-          if [ -n "$_files" ]; then
-            # Note: If no .yaml files were changed, this will not run
-            git checkout FETCH_HEAD -- $_files
-          fi
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
       - name: Run `octodns-sync` to deploy ${{ needs.meta.outputs.config }}
         id: octodns-sync
         uses: solvaholic/octodns-sync@main
         with:
           config_path: ${{ needs.meta.outputs.config }}
           doit: --doit
-          octodns_ref: v0.9.14
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.route53_aws_key_id }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.route53_aws_secret_access_key }}

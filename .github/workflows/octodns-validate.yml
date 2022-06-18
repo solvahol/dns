@@ -2,7 +2,7 @@ name: octodns-sync
 
 on:
   # Run when changes are pushed to any pull request
-  pull_request_target:
+  pull_request:
     paths:
       - '*.yaml'
   # Note: Running workflows on pull_request_target can be dangerous!
@@ -51,7 +51,7 @@ jobs:
         id: get-ref
         run: |
           case "${{ github.event_name }}" in
-            "pull_request_target")
+            "pull_request")
               _ref=refs/pull/${{ github.event.pull_request.number }}/merge ;;
             "issue_comment")
               _ref=refs/pull/${{ github.event.issue.number }}/merge ;;
@@ -74,23 +74,10 @@ jobs:
     outputs:
       plan: ${{ steps.octodns-sync.outputs.plan }}
     steps:
-      - name: Checkout ${{ github.repository }}:${{ github.ref }}
+      - name: Checkout ${{ github.repository }}:${{ needs.meta.outputs.ref }}
         uses: actions/checkout@v3
-      - name: Checkout config files from ${{ needs.meta.outputs.ref }}
-        if: ${{ github.ref != needs.meta.outputs.ref }}
-        run: |
-          # Fetch ref
-          _ref=${{ needs.meta.outputs.ref }}
-          git fetch origin ${_ref}
-          # List changed config files in ref
-          if _files="$(git diff --name-only HEAD FETCH_HEAD | \
-                  grep "\.yaml$" | \
-                  grep -v "^.github/")"; then
-            # Checkout config files from ref
-            git checkout FETCH_HEAD -- $_files
-          else
-            echo "SKIP: No config files changed, in ${_ref}."
-          fi
+        with:
+          ref: ${{ needs.meta.outputs.ref }}
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
@@ -113,7 +100,7 @@ jobs:
   comment:
     name: Add ${{ needs.meta.outputs.config }} plan to PR comment
     needs: [meta, validate]
-    if: ${{ github.event_name == 'pull_request_target' }}
+    if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-20.04
     steps:
       - name: Find previous comment, if present

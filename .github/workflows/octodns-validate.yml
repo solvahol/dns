@@ -90,8 +90,6 @@ jobs:
         with:
           config_path: ${{ needs.meta.outputs.config }}
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.route53_aws_key_id }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.route53_aws_secret_access_key }}
           AZURE_APPLICATION_ID: ${{ secrets.azure_application_id }}
           AZURE_AUTHENTICATION_KEY: ${{ secrets.azure_authentication_key }}
           AZURE_DIRECTORY_ID: ${{ secrets.azure_directory_id }}

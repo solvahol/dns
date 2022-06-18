@@ -1,3 +1,2 @@
 octodns==0.9.17
 octodns_azure==0.0.3
-octodns_route53==0.0.4

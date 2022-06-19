@@ -21,6 +21,9 @@ ams01:
       - flags: 0
         tag: issue
         value: letsencrypt.org
+git:
+  type: CNAME
+  value: ams01.solvahol.org.
 mail:
   type: CNAME
   value: ams01.solvahol.org.

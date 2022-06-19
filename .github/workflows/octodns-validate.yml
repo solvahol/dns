@@ -85,7 +85,7 @@ jobs:
       - run: pip install -r requirements.txt
       - name: Run `octodns-sync` with ${{ needs.meta.outputs.config }}
         id: octodns-sync
-        uses: solvaholic/octodns-sync@issue86
+        uses: solvaholic/octodns-sync@main
         # TODO: When no changes, skip the rest of this workflow?
         with:
           config_path: ${{ needs.meta.outputs.config }}

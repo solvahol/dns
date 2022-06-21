@@ -94,7 +94,7 @@ jobs:
       - run: pip install -r requirements.txt
       - name: Run `octodns-sync` to deploy ${{ needs.meta.outputs.config }}
         id: octodns-sync
-        uses: solvaholic/octodns-sync@main
+        uses: solvaholic/octodns-sync@v3
         with:
           config_path: ${{ needs.meta.outputs.config }}
           doit: --doit

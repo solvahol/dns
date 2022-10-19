@@ -21,7 +21,7 @@ ams01:
       - flags: 0
         tag: issue
         value: letsencrypt.org
-example:
+hexample:
   type: CNAME
   value: ams01.solvahol.org.
 git:

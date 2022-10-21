@@ -94,10 +94,6 @@ jobs:
           AZURE_AUTHENTICATION_KEY: ${{ secrets.azure_authentication_key }}
           AZURE_DIRECTORY_ID: ${{ secrets.azure_directory_id }}
           AZURE_SUBSCRIPTION_ID: ${{ secrets.azure_subscription_id }}
-      - run: ls -l /home/runner/work/dns/dns/octodns-sync.log
-      - run: echo "${{ steps.octodns-sync.outputs.log }}"
-      - run: ls -l /home/runner/work/dns/dns/octodns-sync.plan
-      - run: echo "${{ steps.octodns-sync.outputs.plan }}"
 
   comment:
     name: Add ${{ needs.meta.outputs.config }} plan to PR comment

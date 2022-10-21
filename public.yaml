@@ -9,7 +9,7 @@ providers:
     class: octodns.provider.yaml.YamlProvider
     directory: .
   azuredns:
-    class: octodns.provider.azuredns.AzureProvider
+    class: octodns_azure.AzureProvider
     client_id: env/AZURE_APPLICATION_ID
     key: env/AZURE_AUTHENTICATION_KEY
     directory_id: env/AZURE_DIRECTORY_ID

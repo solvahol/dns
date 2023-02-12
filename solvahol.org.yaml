@@ -27,7 +27,7 @@ git:
 mail:
   type: CNAME
   value: ams01.solvahol.org.
-test:
+test2:
   type: CNAME
   value: ams01.solvahol.org.
 www:

@@ -95,7 +95,7 @@ jobs:
         # TODO: When no changes, skip the rest of this workflow?
         with:
           config_path: ${{ needs.meta.outputs.config }}
-          force: No
+          force: Yes
         env:
           AZURE_APPLICATION_ID: ${{ secrets.azure_application_id }}
           AZURE_AUTHENTICATION_KEY: ${{ secrets.azure_authentication_key }}

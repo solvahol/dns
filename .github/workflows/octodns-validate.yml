@@ -78,6 +78,12 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ needs.meta.outputs.ref }}
+      - name: Check out solvaholic/octodns-sync
+        uses: actions/checkout@v3
+        with:
+          repository: solvaholic/octodns-sync
+          ref: 8f4c18e8038c074fc1ffa0b57063505af224ddfa58f795fa7f8f731ce68bd276
+          path: ./.github/actions/octodns-sync
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
@@ -85,7 +91,7 @@ jobs:
       - run: pip install -r requirements.txt
       - name: Run `octodns-sync` with ${{ needs.meta.outputs.config }}
         id: octodns-sync
-        uses: solvaholic/octodns-sync@8f4c18e8038c074fc1ffa0b57063505af224ddfa58f795fa7f8f731ce68bd276
+        uses: ./.github/actions/octodns-sync
         # TODO: When no changes, skip the rest of this workflow?
         with:
           config_path: ${{ needs.meta.outputs.config }}

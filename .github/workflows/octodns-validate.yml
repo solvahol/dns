@@ -82,7 +82,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: solvaholic/octodns-sync
-          ref: refs/pull/97/head
+          ref: refs/pull/99/head
           path: ./.github/actions/octodns-sync
       - uses: actions/setup-python@v4
         with:
@@ -95,6 +95,7 @@ jobs:
         # TODO: When no changes, skip the rest of this workflow?
         with:
           config_path: ${{ needs.meta.outputs.config }}
+          force: No
         env:
           AZURE_APPLICATION_ID: ${{ secrets.azure_application_id }}
           AZURE_AUTHENTICATION_KEY: ${{ secrets.azure_authentication_key }}

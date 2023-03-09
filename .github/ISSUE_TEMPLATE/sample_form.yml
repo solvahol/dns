@@ -5,10 +5,10 @@ labels: ["pretzels", "mustard", "candy"]
 assignees: []
 
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for taking the time to fill out this bug report!
+- type: markdown
+  attributes:
+    value: |
+      Thanks for taking the time to fill out this bug report!
 - type: input
   id: contact
   attributes:

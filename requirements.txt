@@ -1,2 +1,2 @@
-octodns==0.9.21
+octodns==1.0.0
 octodns_azure==0.0.4

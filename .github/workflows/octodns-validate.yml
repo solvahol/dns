@@ -41,7 +41,7 @@ jobs:
       sha: ${{ steps.get-sha.outputs.sha }}
     steps:
       - name: Checkout ${{ github.repository }}:${{ github.ref }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: 'which-config: Which config file to run?'
         id: which-config
         run: |
@@ -75,11 +75,11 @@ jobs:
       plan: ${{ steps.octodns-sync.outputs.plan }}
     steps:
       - name: Checkout ${{ github.repository }}:${{ needs.meta.outputs.ref }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ needs.meta.outputs.ref }}
       - name: Check out solvaholic/octodns-sync
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: solvaholic/octodns-sync
           ref: refs/pull/99/head
